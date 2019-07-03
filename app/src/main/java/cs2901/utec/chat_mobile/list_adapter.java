@@ -1,6 +1,7 @@
 package cs2901.utec.chat_mobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,18 @@ public class list_adapter extends RecyclerView.Adapter<list_adapter.ExampleViewH
         String creatorName = currentItem.getCreator();
 
         holder.mTextViewCreator.setText(creatorName);
+
+        holder.mTextViewCreator.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent goToMessage = new Intent(mContext,MessageActivity.class);
+                /*goToMessage.putExtra("user_from_id",userFromId);
+                goToMessage.putExtra("user_to_id",id);
+                goToMessage.putExtra("username", username);*/
+                mContext.startActivity(goToMessage);
+            }
+        });
     }
 
     @Override

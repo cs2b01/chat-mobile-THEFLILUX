@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -36,21 +37,47 @@ public class ContactActivity extends AppCompatActivity {
         mExampleList = new ArrayList<>();
 
         mRequestQueue = Volley.newRequestQueue(this);
+
+        currentJSON();
         parseJSON();
     }
 
-    private void parseJSON() {
-        String url = "https://api.myjson.com/bins/ksohj";
+    private void currentJSON() {
+        String url = "http://10.0.2.2:8080/current";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray jsonArray = response.getJSONArray("Contactos");
+                                String creatorName = response.getString("name");
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject hit = jsonArray.getJSONObject(i);
+                                setTitle(creatorName);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        mRequestQueue.add(request);
+    }
+
+    private void parseJSON() {
+        String url = "http://10.0.2.2:8080/users"; //"https://api.myjson.com/bins/ksohj"
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject hit = response.getJSONObject(i);
 
                                 String creatorName = hit.getString("name");
 
