@@ -1,13 +1,12 @@
 package cs2901.utec.chat_mobile;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import java.util.Map;
-import java.util.HashMap;
-import org.json.JSONObject;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -16,10 +15,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import android.content.Intent;
-import org.json.JSONException;
-import android.view.View;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -66,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                         String message = response.getString("message");
                         if(message.equals("Authorized")) {
                             showMessage("Authenticated");
-                            Intent intent=new Intent(getActivity(), ContactActivity.class);
+                            Intent intent = new Intent(getActivity(), ContactsActivity.class);
+                            intent.putExtra("user_id", response.getInt("user_id"));
+                            intent.putExtra("username", response.getString("username"));
                             startActivity(intent);
                         }
                         else {
@@ -83,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
-                    if( error instanceof  AuthFailureError ){ //Se desencadena si el codigo es 401
+                    if( error instanceof  AuthFailureError ){
                         showMessage("Unauthorized");
                     }
                     else {
